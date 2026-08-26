@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -11,6 +12,17 @@ class FrontendInfographic extends Component
 {
     public $paginate = 10;
     public $period = '';
+
+    /**
+     * Kategori infografis. Default kosong = semua, supaya membuka halaman ini
+     * tidak diam-diam menyembunyikan salah satu kategori. Disinkronkan ke ?cat=
+     * lewat history, jadi tautannya bisa dibagikan.
+     */
+    #[Url(as: 'cat')]
+    public $category = '';
+
+    public const KATEGORI = ['monthly', 'annual'];
+
     use WithPagination;
 
     /*
@@ -21,6 +33,14 @@ class FrontendInfographic extends Component
     private const MONTH = "COALESCE(period, substr(publishdate, 1, 7))";
 
     public function updatedPeriod(){
+        $this->resetPage();
+    }
+
+    public function updatedCategory($value){
+        if ($value !== '' && ! in_array($value, self::KATEGORI)) {
+            $this->category = '';
+        }
+
         $this->resetPage();
     }
 
@@ -51,6 +71,7 @@ class FrontendInfographic extends Component
         return $this->published()
         ->selectRaw($this->getSelectInfographic())
         ->when($this->period, fn ($q) => $q->whereRaw(self::MONTH . ' = ?', [$this->period]))
+        ->when(in_array($this->category, self::KATEGORI), fn ($q) => $q->where('category', $this->category))
         // Bulan dulu supaya periode tak berselang-seling, lalu publishdate
         // agar urutan di dalam satu bulan tetap seperti sebelumnya.
         ->orderByRaw(self::MONTH . ' desc')

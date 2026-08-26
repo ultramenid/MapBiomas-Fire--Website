@@ -273,51 +273,65 @@
         </section>
 
         {{-- ─────────────────────────  INFOGRAFIS  ───────────────────────── --}}
-        <section id="data" class="bg-white py-[7%] sm:py-[4%]" x-data="{ zoom: false }">
-            @php
-                // Gambar dipakai di dua tempat (kartu dan modal), jadi file_exists
-                // di dalam $adaFoto cukup dijalankan sekali.
-                $gambar = $infographic && $adaFoto($infographic->img);
-                $src = $gambar ? asset('storage/files/photos/'.$infographic->img) : '';
-            @endphp
+        <section id="data" class="bg-white py-[7%] sm:py-[4%]">
+            <div class="{{ $shell }} flex flex-col gap-14">
+                @forelse ($infographic as $item)
+                    @php
+                        // Gambar dipakai di dua tempat (kartu dan modal), jadi file_exists
+                        // di dalam $adaFoto cukup dijalankan sekali.
+                        $gambar = $adaFoto($item->img);
+                        $src = $gambar ? asset('storage/files/photos/'.$item->img) : '';
+                    @endphp
 
-            <div class="{{ $shell }}">
-                {{-- Berkasnya bisa hilang: baris CMS lama, unggahan gagal, atau
-                     storage:link belum jalan. Judul dan keterangan di bawah tetap
-                     tampil, jadi gambarnya cukup dilewati. --}}
-                @if ($gambar)
-                    <button type="button" x-on:click="zoom = true"
-                            class="{{ $anim }} block w-full cursor-zoom-in" {!! $reveal() !!}
-                            aria-label="Perbesar infografis {{ $infographic->title }}">
-                        <img src="{{ $src }}" alt="{{ $infographic->title }}" class="w-full" loading="lazy">
-                        {{-- Angka pada infografis terlalu kecil di layar seluler; kursor
-                             zoom tidak terlihat di sana, jadi petunjuknya ditulis. --}}
-                        <span class="mt-3 block text-left font-mono text-[10px] uppercase tracking-[0.16em] text-ember lg:hidden">
-                            {{ __('Tap to enlarge') }}
-                        </span>
-                    </button>
+                    {{-- State zoom per infografis: kalau dipakai bersama, membuka
+                         satu panel akan ikut membuka panel yang lain. --}}
+                    <div x-data="{ zoom: false }">
+                        {{-- Berkasnya bisa hilang: baris CMS lama, unggahan gagal, atau
+                             storage:link belum jalan. Judul dan keterangan di bawah tetap
+                             tampil, jadi gambarnya cukup dilewati. --}}
+                        @if ($gambar)
+                            <button type="button" x-on:click="zoom = true"
+                                    class="{{ $anim }} block w-full cursor-zoom-in" {!! $reveal() !!}
+                                    aria-label="Perbesar infografis {{ $item->title }}">
+                                <img src="{{ $src }}" alt="{{ $item->title }}" class="w-full" loading="lazy">
+                                {{-- Angka pada infografis terlalu kecil di layar seluler; kursor
+                                     zoom tidak terlihat di sana, jadi petunjuknya ditulis. --}}
+                                <span class="mt-3 block text-left font-mono text-[10px] uppercase tracking-[0.16em] text-ember lg:hidden">
+                                    {{ __('Tap to enlarge') }}
+                                </span>
+                            </button>
 
-                    {{-- Infografis penuh: teksnya kecil, jadi bisa dibuka besar.
-                         Posisinya fixed, jadi boleh duduk di sini — satu @if untuk
-                         pemicu zoom dan panelnya sekaligus. --}}
-                    <div x-show="zoom" x-cloak x-on:keydown.escape.window="zoom = false"
-                         {{-- .self: hanya klik pada latarnya yang menutup, bukan klik
-                              yang merambat dari elemen lain. --}}
-                         x-on:click.self="zoom = false"
-                         class="fixed inset-0 z-[60] flex overflow-auto bg-black/90 p-4"
-                         role="dialog" aria-modal="true" aria-label="Infografis ukuran penuh">
-                        <button type="button" x-on:click="zoom = false"
-                                class="fixed right-5 top-5 z-10 border border-white/40 bg-black/60 px-4 py-2 font-display text-sm text-white transition-colors hover:bg-white hover:text-black">
-                            {{ __('Tutup') }}
-                        </button>
-                        {{-- Di seluler sengaja lebih lebar dari layar dan digeser, karena
-                             menyusutkannya agar muat justru membuatnya tetap tak terbaca. --}}
-                        <img src="{{ $src }}" alt=""
-                             class="m-auto w-[900px] max-w-none lg:max-h-full lg:w-auto lg:max-w-full lg:object-contain" x-on:click.stop>
+                            <div x-show="zoom" x-cloak x-on:keydown.escape.window="zoom = false"
+                                 {{-- .self: hanya klik pada latarnya yang menutup, bukan klik
+                                      yang merambat dari elemen lain. --}}
+                                 x-on:click.self="zoom = false"
+                                 class="fixed inset-0 z-[60] flex overflow-auto bg-black/90 p-4"
+                                 role="dialog" aria-modal="true" aria-label="{{ $item->title }}">
+                                <button type="button" x-on:click="zoom = false"
+                                        class="fixed right-5 top-5 z-10 border border-white/40 bg-black/60 px-4 py-2 font-display text-sm text-white transition-colors hover:bg-white hover:text-black">
+                                    {{ __('Tutup') }}
+                                </button>
+                                {{-- Di seluler sengaja lebih lebar dari layar dan digeser, karena
+                                     menyusutkannya agar muat justru membuatnya tetap tak terbaca. --}}
+                                <img src="{{ $src }}" alt=""
+                                     class="m-auto w-[900px] max-w-none lg:max-h-full lg:w-auto lg:max-w-full lg:object-contain" x-on:click.stop>
+                            </div>
+                        @endif
+
+                        {{-- <div class="{{ $anim }} mt-6" {!! $reveal(120) !!}>
+                            <p class="font-display text-[20px] font-semibold leading-[29px] text-neutral-900">
+                                {{ $teks($item->title, __('Tanpa judul')) }}
+                            </p>
+                            <div class="mt-2 max-w-[70ch] font-display text-[16px] font-normal leading-[24px] text-neutral-500">
+                                {{ $teks($item->description, __('Belum ada ringkasan.')) }}
+                            </div>
+                        </div> --}}
                     </div>
-                @endif
-
-
+                @empty
+                    <p class="{{ $anim }} py-16 text-center font-display text-neutral-400" {!! $reveal() !!}>
+                        {{ __('Belum ada infografis terbit.') }}
+                    </p>
+                @endforelse
             </div>
         </section>
 

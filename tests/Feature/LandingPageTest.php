@@ -41,6 +41,7 @@ class LandingPageTest extends TestCase
             'publishdate' => Carbon::now('Asia/Jakarta')->subDay()->format('Y-m-d H:i:s'),
             'titleID' => 'Infografis uji',
             'titleEN' => 'Test infographic',
+            'category' => 'monthly',
             'imgID' => 'info-id.jpg',
             'imgEN' => 'info-en.jpg',
             'descriptionID' => 'Keterangan infografis.',

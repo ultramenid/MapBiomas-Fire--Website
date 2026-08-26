@@ -12,10 +12,13 @@ class ListInfographicComponent extends Component
     use WithPagination;
 
     public $deleteName, $deleteID, $deleter;
-    public  $paginate = 10, $query = '';
+    public  $paginate = 10, $query = '', $category = '';
 
      // Hook Livewire: dipicu wire:model.live pada input pencarian.
     public function updatedQuery(){
+        $this->resetPage();
+    }
+    public function updatedCategory(){
         $this->resetPage();
     }
     public function closeDelete(){
@@ -43,11 +46,16 @@ class ListInfographicComponent extends Component
     public function getNews(){
         $sc = '%' . $this->query . '%';
         try {
-            return  DB::table('infographic')
-                        ->select('id', 'titleEN', 'imgEN', 'status', 'publishdate')
+            $q = DB::table('infographic')
+                        ->select('id', 'titleEN', 'imgEN', 'status', 'publishdate', 'category')
                         ->where('titleEN', 'like', $sc)
-                        ->orderByDesc('publishdate')
-                        ->paginate($this->paginate);
+                        ->orderByDesc('publishdate');
+
+            if (in_array($this->category, ['monthly', 'annual'])) {
+                $q->where('category', $this->category);
+            }
+
+            return $q->paginate($this->paginate);
         } catch (\Throwable $th) {
             return [];
         }

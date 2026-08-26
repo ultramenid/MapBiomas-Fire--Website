@@ -2,9 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Livewire\FrontendInfographic;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
@@ -204,6 +206,51 @@ class FrontendPagesTest extends TestCase
         $this->get(route('detailnews', ['en', $id, 'judul-berita']))
             ->assertSee('name="description" content="Ringkasan berita."', false)
             ->assertDontSee('content="&lt;p&gt;', false);
+    }
+
+    private function terbitkanInfografis(string $category, string $judul): void
+    {
+        DB::table('infographic')->insert([
+            'publishdate' => Carbon::now('Asia/Jakarta')->subDay()->format('Y-m-d H:i:s'),
+            'period' => Carbon::now('Asia/Jakarta')->format('Y-m'),
+            'category' => $category,
+            'titleID' => $judul, 'titleEN' => $judul,
+            'imgID' => 'a.jpg', 'imgEN' => 'a.jpg',
+            'descriptionID' => 'x', 'descriptionEN' => 'x',
+            'slug' => strtolower($judul),
+            'status' => '1',
+        ]);
+    }
+
+    public function test_saringan_kategori_infografis_menyaring_daftar(): void
+    {
+        $this->terbitkanInfografis('monthly', 'Bulanan');
+        $this->terbitkanInfografis('annual', 'Tahunan');
+
+        Livewire::test(FrontendInfographic::class)
+            ->assertSee('Bulanan')->assertSee('Tahunan')
+            ->set('category', 'annual')
+            ->assertSee('Tahunan')->assertDontSee('Bulanan')
+            ->set('category', 'monthly')
+            ->assertSee('Bulanan')->assertDontSee('Tahunan');
+    }
+
+    /**
+     * Default kosong berarti semua. Membuka halaman ini tidak boleh diam-diam
+     * menyembunyikan salah satu kategori, dan nilai ngawur dari ?cat= juga
+     * dikembalikan ke semua, bukan menghasilkan daftar kosong.
+     */
+    public function test_kategori_infografis_kosong_atau_ngawur_menampilkan_semua(): void
+    {
+        $this->terbitkanInfografis('monthly', 'Bulanan');
+        $this->terbitkanInfografis('annual', 'Tahunan');
+
+        Livewire::test(FrontendInfographic::class)
+            ->assertSet('category', '')
+            ->assertSee('Bulanan')->assertSee('Tahunan')
+            ->set('category', 'sembarang')
+            ->assertSet('category', '')
+            ->assertSee('Bulanan')->assertSee('Tahunan');
     }
 
     public function test_infografis_terbuka(): void

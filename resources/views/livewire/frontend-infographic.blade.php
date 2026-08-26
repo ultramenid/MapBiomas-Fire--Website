@@ -1,4 +1,18 @@
 <div>
+    {{-- Tab kategori memakai partial yang sama dengan ATBD dan factsheet,
+         dalam mode Livewire supaya tidak memuat ulang halaman di sebelah
+         saringan bulan yang juga reaktif. --}}
+    @include('partials.categoryTabs', [
+        'wire' => 'category',
+        'active' => $category,
+        'label' => __('Infographic category'),
+        'tabs' => [
+            '' => __('All'),
+            'annual' => __('Annual'),
+            'monthly' => __('Monthly'),
+        ],
+    ])
+
     {{-- Infografis terbit tiap bulan; tanpa saringan ini bulan lama hanya
          bisa dicapai lewat halaman berikutnya. --}}
     @if ($periods->count() > 1)

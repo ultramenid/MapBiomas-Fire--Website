@@ -13,6 +13,7 @@ class AddInfographicComponent extends Component
 {
     use WithFileUploads;
     public $period;
+    public $category = 'monthly';
     public $publishdate, $titleID, $titleEN, $descriptionID, $descriptionEN, $photoID, $photoEN, $isactive=0;
 
     public function uploadImageID(){
@@ -47,6 +48,7 @@ class AddInfographicComponent extends Component
             DB::table('infographic')->insert([
                 'publishdate' => $this->publishdate,
                 'period' => $this->period ?: null,
+                'category' => $this->category,
                 'titleID' => $this->titleID,
                 'titleEN' => $this->titleEN,
                 'slug' => Str::slug($this->titleID,'-'),
@@ -68,7 +70,10 @@ class AddInfographicComponent extends Component
     }
 
     public function manualValidation(){
-        if($this->titleID == '' ){
+        if(!in_array($this->category, ['monthly', 'annual'])){
+            Toaster::error('Category must be monthly or annual!');
+            return;
+        }elseif($this->titleID == '' ){
             Toaster::error('Title Indonesia is required!');
             return;
         }elseif($this->titleEN == '' ){

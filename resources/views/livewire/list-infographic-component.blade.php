@@ -20,6 +20,14 @@
         <label class="text-gray-600 dark:text-gray-300 mr-2 text-sm" >Search </label>
         <input placeholder="" type="text" class="bg-gray-100 dark:bg-newgray-700 text-newgray-700 dark:text-gray-300 rounded w-full border  py-3 px-4 focus:outline-none border-gray-300 dark:border-opacity-20 text-sm"  wire:model.live.debounce.300ms="query">
     </div>
+
+    {{-- Tab kategori: Monthly / Annual / All --}}
+    <div class="mt-4 flex gap-2">
+        <button wire:click="$set('category', '')" class="rounded px-3 py-1 text-sm font-semibold {{ $category === '' ? 'bg-newgray-900 text-white' : 'bg-gray-200 text-gray-700' }}">All</button>
+        <button wire:click="$set('category', 'monthly')" class="rounded px-3 py-1 text-sm font-semibold {{ $category === 'monthly' ? 'bg-newgray-900 text-white' : 'bg-gray-200 text-gray-700' }}">Monthly</button>
+        <button wire:click="$set('category', 'annual')" class="rounded px-3 py-1 text-sm font-semibold {{ $category === 'annual' ? 'bg-newgray-900 text-white' : 'bg-gray-200 text-gray-700' }}">Annual</button>
+    </div>
+
     <div class="flex flex-col py-5">
         <div class="-my-2  sm:-mx-6 lg:-mx-8 ">
             <div class="py-2 align-middle inline-block w-full sm:px-6 lg:px-8 ">
@@ -35,6 +43,10 @@
                             </th>
                             <th class="px-4 py-3 bg-gray-50 dark:bg-opacity-10  dark:text-white text-left text-xs font-medium text-gray-500 uppercase tracking-wider  sm:w-2/12 w-0">
                                 <a class="hidden sm:block">Images</a>
+                            </th>
+
+                            <th class="px-4 py-3 bg-gray-50 dark:bg-opacity-10 dark:text-white text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:w-1/12 w-0">
+                                <a class="hidden sm:block">Category</a>
                             </th>
 
                             <th  class=" cursor-pointer px-4 py-3 bg-gray-50 dark:bg-opacity-10  dark:text-white text-center font-medium text-gray-500 uppercase tracking-wider  sm:w-2/12 w-0">
@@ -66,6 +78,14 @@
                                     @endif
                                 </div>
 
+                            </td>
+
+                            <td class="px-4 py-4 break-words text-sm text-newgray-700 dark:text-gray-300">
+                                @if ($item->category == 'monthly')
+                                    <span class="inline-block rounded bg-landy px-2 py-1 text-xs font-semibold text-white">monthly</span>
+                                @else
+                                    <span class="inline-block rounded bg-landy-2 px-2 py-1 text-xs font-semibold text-white">annual</span>
+                                @endif
                             </td>
 
                             <td class=" py-4 break-words text-sm text-center  text-newgray-700 dark:text-gray-300">

@@ -15,12 +15,14 @@ class EditInfographicComponent extends Component
     public $publishdate, $titleID, $titleEN, $photoID, $photoEN, $isactive, $descriptionID, $descriptionEN, $idInfographic;
     public $uphotoID, $uphotoEN;
     public $period;
+    public $category;
 
     public function mount($id){
         $this->idInfographic = $id;
         $data = DB::table('infographic')->where('id', $id)->first();
         $this->publishdate = $data->publishdate;
         $this->period = $data->period;
+        $this->category = $data->category;
         $this->titleEN = $data->titleEN;
         $this->titleID = $data->titleID;
         $this->descriptionID = $data->descriptionID;
@@ -98,6 +100,7 @@ class EditInfographicComponent extends Component
             ->update([
                 'publishdate' => $this->publishdate,
                 'period' => $this->period ?: null,
+                'category' => $this->category,
                 'titleID' => $this->titleID,
                 'titleEN' => $this->titleEN,
                 'descriptionID' => $this->descriptionID,
