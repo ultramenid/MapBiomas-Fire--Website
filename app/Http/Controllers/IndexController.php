@@ -58,21 +58,15 @@ class IndexController extends Controller
 
     public function getInfographic()
     {
-        $items = DB::table('infographic')
+        // Hanya infografis terbaru, apa pun kategorinya (monthly/annual).
+        return DB::table('infographic')
             ->selectRaw($this->getSelectInfographic() . ', category')
             ->where('publishdate', '<', Carbon::now('Asia/Jakarta'))
             ->where('status', 1)
             ->whereIn('category', ['monthly', 'annual'])
             ->orderBy('publishdate', 'desc')
+            ->limit(1)
             ->get();
-
-        // Satu terbaru per kategori; urutan: monthly dulu, lalu annual.
-        $order = ['monthly' => 0, 'annual' => 1];
-        return $items
-            ->groupBy('category')
-            ->map(fn($group) => $group->first())
-            ->sortBy(fn($item) => $order[$item->category] ?? 9)
-            ->values();
     }
 
     public function getNews()
