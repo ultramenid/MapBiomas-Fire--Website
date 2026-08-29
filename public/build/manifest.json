@@ -1,7 +1,12 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-B0uZhvcW.css",
+    "file": "assets/app-DqmOB1IH.css",
     "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/css/cms/tinymce.css": {
+    "file": "assets/tinymce-CzrfzQDB.css",
+    "src": "resources/css/cms/tinymce.css",
     "isEntry": true
   },
   "resources/js/app.js": {

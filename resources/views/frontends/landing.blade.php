@@ -61,7 +61,7 @@
     $frame = 'mx-auto w-full max-w-6xl';
 @endphp
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}" class="scroll-pt-24 scroll-smooth">
+<html lang="{{ app()->getLocale() }}" class="scroll-pt-24 scroll-smooth [color-scheme:light]">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -96,7 +96,9 @@
      x-intersect pada elemen yang jauh di bawah ikut diinisialisasi.
      font-instrument: body landing memakai Instrument Sans tanpa mengubah
      font-sans (Open Sans) halaman lain. --}}
-<body class="font-instrument mx-auto max-w-6xl overflow-x-clip antialiased" x-data>
+{{-- bg-white: tanpa ini kanvas halaman telusur warna tema peramban; di
+     ponsel mode gelap jadi hitam di sela bagian berlatar putih. --}}
+<body class="font-instrument mx-auto max-w-6xl overflow-x-clip bg-white antialiased" x-data>
 
     {{-- Laci seluler situs, dipakai sampai lg karena di bawah itu menu
          6 item tidak muat sebaris. --}}

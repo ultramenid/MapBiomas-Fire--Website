@@ -13,18 +13,6 @@
         ],
     ])
 
-    {{-- Infografis terbit tiap bulan; tanpa saringan ini bulan lama hanya
-         bisa dicapai lewat halaman berikutnya. --}}
-    @if ($periods->count() > 1)
-        <select wire:model.live='period'
-                class="mt-4 w-full rounded border border-landy/40 px-3 py-2 text-landy focus:outline-none sm:w-auto">
-            <option value="">{{ __('All months') }}</option>
-            @foreach ($periods as $bulan)
-                <option value="{{ $bulan }}">{{ \App\Livewire\FrontendInfographic::monthLabel($bulan) }}</option>
-            @endforeach
-        </select>
-    @endif
-
     @forelse ($data as $item)
         <div class="mt-4 flex flex-col gap-2">
             <a href="{{ asset('storage/files/photos/'.$item->img) }}"><img src="{{ asset('storage/files/photos/'.$item->img) }}" alt="{{$item->title}}" class="w-full h-full mt-4"></a>

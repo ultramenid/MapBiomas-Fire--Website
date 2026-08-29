@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html>
+{{-- [color-scheme:light] + bg-white: situs publik berdesain terang. Tanpa
+     deklarasi ini, peramban ponsel dalam mode gelap melukis kanvas hitam di
+     sela bagian berlatar putih dan menggelapkan kontrol formulir. --}}
+<html class="[color-scheme:light]">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,7 +35,7 @@
 
 
 </head>
-<body class="font-display">
+<body class="font-display bg-white">
     @yield('content')
 
     @stack('scripts')

@@ -1,7 +1,3 @@
-@extends('layouts.dashboardLayouts')
-
-@section('content')
-    @include('partials.backendHeader')
-    @include('partials.backendNav')
+<x-cms-layout title="Edit news">
     <livewire:edit-news-component :id="$idNews" />
-@endsection
+</x-cms-layout>

@@ -1,7 +1,3 @@
-@extends('layouts.dashboardLayouts')
-
-@section('content')
-    @include('partials.backendHeader')
-    @include('partials.backendNav')
+<x-cms-layout title="Edit factsheet">
     <livewire:edit-factsheet-component :id="$idFactsheet" />
-@endsection
+</x-cms-layout>

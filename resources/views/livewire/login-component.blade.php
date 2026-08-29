@@ -1,55 +1,56 @@
-<div class="mx-auto  rounded border w-96 bg-white shadow-sm">
-    <form wire:submit.prevent="login">
-        @csrf
-        <div class="flex w-full justify-center">
-            <img src="{{ asset('assets/logo-full.png') }}" alt="" class="w-40 h-full py-12">
-        </div>
-        <div class="px-6  mb-4">
-            <label for="formName" class="block text-gray-700 text-sm font-semibold mb-2">Email:</label>
-            <input type="text" autofocus class="appearance-none border rounded w-full py-2 px-5 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" autofocus wire:model.defer="email" wire:keydown.enter='login'>
-            @error('email') <span class="text-red-500 text-xs">{{ $message }}</span>@enderror
-        </div>
-        <div class="px-6  mb-4">
-            <label for="formName" class="block text-gray-700 text-sm font-semibold mb-2">Password:</label>
-            <input type="password" class=" appearance-none border rounded w-full py-2 px-5 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" wire:model.defer="password" wire:keydown.enter='login'>
-            @error('password') <span class="text-red-500 text-xs">{{ $message }}</span>@enderror
-        </div>
-        @if (\App\Support\Turnstile::enabled())
-            {{-- wire:ignore wajib: Livewire tidak boleh merender ulang wadah ini,
-                 karena widget Cloudflare menyisipkan iframe-nya sendiri di sini
-                 dan akan hilang bila DOM-nya ditimpa. --}}
-            <div class="px-6 mb-4" wire:ignore>
-                <div id="turnstile-widget"
-                     class="cf-turnstile"
-                     data-sitekey="{{ \App\Support\Turnstile::siteKey() }}"
-                     data-callback="onTurnstileSuccess"
-                     data-expired-callback="onTurnstileExpired"
-                     data-error-callback="onTurnstileExpired"
-                     data-language="{{ app()->getLocale() }}"></div>
+<div class="w-full max-w-sm">
+    <div class="mb-6 flex flex-col items-center">
+        <img src="{{ asset('assets/logo-fire.png') }}" alt="MapBiomas Fire" class="h-12 w-auto">
+        <p class="mt-4 text-xs font-semibold uppercase tracking-widest text-ink-muted">CMS</p>
+    </div>
+
+    <div class="rounded-lg border border-line bg-surface p-6 shadow-sm">
+        <h1 class="text-base font-semibold text-ink">Log in to your account</h1>
+        <p class="mt-1 text-sm text-ink-muted">Enter your credentials to access the CMS.</p>
+
+        <form wire:submit.prevent="login" class="mt-5 space-y-4">
+            @csrf
+            <div>
+                <label for="email" class="mb-1.5 block text-xs font-medium text-ink">Email</label>
+                <input type="text" id="email" autofocus autocomplete="email" wire:model="email"
+                       placeholder="name@example.com"
+                       class="h-8 w-full rounded-md border border-line-strong bg-surface px-2.5 text-sm text-ink placeholder:text-ink-subtle cms-focus">
+                @error('email') <span class="mt-1.5 block text-xs text-danger">{{ $message }}</span> @enderror
             </div>
-        @endif
 
-        <div class="px-6 mb-2">
-            @if (session()->has('message'))
-            <span class="text-red-500 text-xs">{{ session('message') }}</span>
+            <div>
+                <label for="password" class="mb-1.5 block text-xs font-medium text-ink">Password</label>
+                <input type="password" id="password" autocomplete="current-password" wire:model="password"
+                       class="h-8 w-full rounded-md border border-line-strong bg-surface px-2.5 text-sm text-ink placeholder:text-ink-subtle cms-focus">
+                @error('password') <span class="mt-1.5 block text-xs text-danger">{{ $message }}</span> @enderror
+            </div>
+
+            @if (\App\Support\Turnstile::enabled())
+                {{-- wire:ignore wajib: Livewire tidak boleh merender ulang wadah ini,
+                     karena widget Cloudflare menyisipkan iframe-nya sendiri di sini
+                     dan akan hilang bila DOM-nya ditimpa. --}}
+                <div wire:ignore>
+                    <div id="turnstile-widget"
+                         class="cf-turnstile"
+                         data-sitekey="{{ \App\Support\Turnstile::siteKey() }}"
+                         data-callback="onTurnstileSuccess"
+                         data-expired-callback="onTurnstileExpired"
+                         data-error-callback="onTurnstileExpired"
+                         data-language="{{ app()->getLocale() }}"></div>
+                </div>
             @endif
-        </div>
-        <div class="px-6 mb-4 text-right">
-            <button wire:loading.remove wire:click="login" type="button" class=" inline-flex justify-center  sm:w-1/4 w-full rounded-md border border-transparent px-4 py-2 bg-gray-900 text-base leading-6 font-medium text-white shadow-sm hover:bg-white hover:text-black hover:border-black transition ease-in-out duration-150 sm:text-sm sm:leading-5">
-                Login
-            </button>
-            {{-- loading --}}
-            <button wire:loading wire:target='login' type="button" class=" inline-flex justify-center  sm:w-1/4 w-full rounded-md border border-transparent px-4 py-2 bg-gray-900 text-base leading-6 font-medium text-white shadow-sm transition ease-in-out duration-150 sm:text-sm sm:leading-5 cursor-not-allowed">
-                <svg class="animate-spin mx-auto h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-            </button>
 
-            <p class="text-xs text-center mt-4 "><a data-turbolinks="false"  href="{{ url('/') }}" >Continue to site. . </a></p>
-        </div>
+            @if (session()->has('message'))
+                <p class="rounded-md border border-danger/30 bg-danger/10 px-3 py-2 text-xs text-danger">
+                    {{ session('message') }}
+                </p>
+            @endif
 
+            <x-cms.button type="submit" loadingTarget="login" class="w-full">Log in</x-cms.button>
+        </form>
+    </div>
 
-    </form>
-
+    <p class="mt-5 text-center text-xs text-ink-muted">
+        <a href="{{ url('/') }}" class="transition-colors hover:text-ink">Continue to site →</a>
+    </p>
 </div>

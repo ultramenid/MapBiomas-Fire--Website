@@ -1,0 +1,703 @@
+/* ══ TinyMCE (oxide) ditata ulang mengikuti token desain CMS ══
+   Semua warna memakai var(--cms-*) dari app.css, sehingga mode gelap
+   ikut berubah begitu kelas .dark di-flip pada <html> — tanpa re-init.
+   Prefiks `body …` dimaksudkan untuk mengungguli skin.min.css oxide yang
+   disuntikkan Tailwind-style SETELAH stylesheet ini (urutan head),
+   bukan sekadar kosmetik. */
+
+/* ── Tipografi: samakan dengan CMS (Open Sans) ─────────────────── */
+body .tox,
+body .tox-dialog-wrap {
+    font-family: 'Open Sans', ui-sans-serif, system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* ── Wadah editor ──────────────────────────────────────────────── */
+body .tox.tox-tinymce {
+    border: 1px solid rgb(var(--cms-line));
+    border-radius: 6px;
+    box-shadow: none;
+    background-color: rgb(var(--cms-surface));
+}
+
+body .tox.tox-tinymce:focus-within {
+    border-color: rgb(var(--cms-accent));
+    box-shadow: 0 0 0 3px rgb(var(--cms-accent) / 0.25);
+}
+
+body .tox .tox-anchorbar { background-color: rgb(var(--cms-surface)); }
+
+/* Header editor menangani skin dengan spesifisitas lebih tinggi
+   `.tox:not(.tox-tinymce-inline) .tox-editor-header` (0,3,0) — perlu dicerminkan. */
+body .tox.tox-tinymce .tox-editor-header,
+body .tox.tox-tinymce-inline .tox-editor-header,
+body .tox.tox-tinymce-aux .tox-editor-header,
+body .tox:not(.tox-tinymce-inline) .tox-editor-header,
+body .tox:not(.tox-tinymce-inline).tox-tinymce--toolbar-sticky-on .tox-editor-header {
+    background-color: rgb(var(--cms-surface));
+    box-shadow: none;
+}
+
+body .tox .tox-view-wrap,
+body .tox .tox-view-wrap__slot-container {
+    background-color: rgb(var(--cms-surface));
+}
+
+/* ── Header: menubar + toolbar ─────────────────────────────────── */
+body .tox .tox-editor-header {
+    background-color: rgb(var(--cms-surface));
+    padding: 0 4px;
+}
+
+body .tox .tox-editor-header:not(:empty) {
+    border-bottom: 1px solid rgb(var(--cms-line));
+}
+
+/* Menubar (File Edit View …) */
+body .tox .tox-menubar {
+    background: transparent;
+    padding: 0 2px;
+}
+
+body .tox .tox-mbtn {
+    height: 28px;
+    margin: 3px 0;
+    padding: 0 8px;
+    border: 0;
+    border-radius: 6px;
+    background-color: transparent;
+    color: rgb(var(--cms-ink-muted));
+    font-size: 13px;
+    box-shadow: none;
+    transition: background-color .15s ease, color .15s ease;
+}
+
+body .tox .tox-mbtn svg { fill: rgb(var(--cms-ink-muted)); }
+
+body .tox .tox-mbtn:hover:not(.tox-mbtn--active),
+body .tox .tox-mbtn:focus:not(.tox-mbtn--active) {
+    background-color: rgb(var(--cms-hover));
+    color: rgb(var(--cms-ink));
+}
+
+body .tox .tox-mbtn:hover:not(.tox-mbtn--active) svg,
+body .tox .tox-mbtn:focus:not(.tox-mbtn--active) svg {
+    fill: rgb(var(--cms-ink));
+}
+
+body .tox .tox-mbtn.tox-mbtn--active,
+body .tox .tox-mbtn:not(:disabled).tox-mbtn--active:focus {
+    background-color: rgb(var(--cms-hover));
+    color: rgb(var(--cms-ink));
+    border: 0;
+    box-shadow: none;
+}
+
+/* Skin memakai latar putih untuk mbtn[disabled] */
+body .tox .tox-mbtn[disabled] {
+    background-color: transparent;
+    color: rgb(var(--cms-ink-subtle));
+}
+
+/* Toolbar */
+body .tox .tox-toolbar,
+body .tox .tox-toolbar__overflow,
+body .tox .tox-toolbar__primary {
+    background: none;
+    background-color: rgb(var(--cms-surface));
+    border-bottom: 1px solid rgb(var(--cms-line));
+    outline: 0;
+}
+
+body .tox .tox-toolbar-overlord { background-color: rgb(var(--cms-surface)); }
+
+/* Toolbar melayang di dalam dialog insert-link, dsb. */
+body .tox.tox-tinymce-aux .tox-toolbar__overflow {
+    background-color: rgb(var(--cms-surface));
+    border: 1px solid rgb(var(--cms-line));
+    border-radius: 6px;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+body .tox .tox-toolbar__overflow { box-shadow: none; }
+
+body .tox .tox-toolbar--scrolling,
+body .tox .tox-toolbar__overflow--scrolling { box-shadow: none; }
+
+body .tox .tox-toolbar__group {
+    padding: 0 4px;
+}
+
+/* Tombol toolbar — skin default-nya chip putih (background:#fff);
+   kita pakai latar transparan dan pill hover seperti nav CMS. */
+body .tox .tox-tbtn {
+    height: 30px;
+    width: 32px;
+    margin: 2px 1px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    background-color: transparent;
+    color: rgb(var(--cms-ink-muted));
+    box-shadow: none;
+    outline: 0;
+    transition: background-color .15s ease, color .15s ease;
+}
+
+body .tox .tox-tbtn svg { fill: currentColor; }
+
+body .tox .tox-tbtn:hover,
+body .tox .tox-tbtn:not(.tox-tbtn--select):hover {
+    background-color: rgb(var(--cms-hover));
+    color: rgb(var(--cms-ink));
+    box-shadow: none;
+    outline: 0;
+}
+
+/* Tombol yang sedang aktif (bold, dll.) — setara pill nav CMS.
+   Skin memakai #a6ccf7 pada (0,3,0); cerminkan dengan body. */
+body .tox .tox-tbtn--active,
+body .tox .tox-tbtn--enabled,
+body .tox .tox-tbtn--enabled:focus,
+body .tox .tox-tbtn--enabled:hover,
+body .tox .tox-tbtn.tox-tbtn--active,
+body .tox .tox-tbtn.tox-tbtn--enabled,
+body .tox .tox-tbtn.tox-tbtn--enabled:focus,
+body .tox .tox-tbtn.tox-tbtn--enabled:hover {
+    background-color: rgb(var(--cms-hover));
+    color: rgb(var(--cms-ink));
+    border: 0;
+    box-shadow: none;
+    position: relative;
+}
+
+/* Tombol nonaktif — skin memaksa latar putih */
+body .tox .tox-tbtn--disabled,
+body .tox .tox-tbtn--disabled:hover,
+body .tox .tox-tbtn:disabled,
+body .tox .tox-tbtn:disabled:hover {
+    background-color: transparent;
+    color: rgb(var(--cms-ink-subtle) / 0.7);
+    border: 0;
+    box-shadow: none;
+    outline: 0;
+}
+
+body .tox .tox-tbtn__chevron { color: inherit; }
+body .tox .tox-tbtn__select-chevron svg { fill: rgb(var(--cms-ink-muted)); }
+
+body .tox .tox-tbtn:focus,
+body .tox .tox-tbtn:not(.tox-tbtn--select):focus {
+    outline: none;
+    border-color: rgb(var(--cms-accent));
+    background-color: rgb(var(--cms-hover));
+    color: rgb(var(--cms-ink));
+    box-shadow: 0 0 0 3px rgb(var(--cms-accent) / 0.25);
+}
+
+/* Cincin fokus biru bawaan skin (::after) dimatikan */
+body .tox .tox-tbtn:focus::after,
+body .tox .tox-tbtn.tox-tbtn--enabled:focus::after,
+body .tox .tox-mbtn:focus:not(:disabled)::after {
+    content: none;
+}
+
+/* Ikon dinonaktifkan — abu redup */
+body .tox .tox-tbtn--disabled svg,
+body .tox .tox-tbtn:disabled svg,
+body .tox .tox-tbtn[disabled] svg,
+body .tox .tox-tbtn--disabled .tox-tbtn svg {
+    fill: rgb(var(--cms-ink-subtle) / 0.7);
+}
+
+/* Split button (forecolor/backcolor) */
+body .tox .tox-split-button {
+    border: 0;
+    border-radius: 6px;
+    margin: 2px 1px;
+    color: rgb(var(--cms-ink-muted));
+    transition: background-color .15s ease, color .15s ease;
+}
+
+body .tox .tox-split-button:hover,
+body .tox .tox-split-button:focus {
+    background-color: rgb(var(--cms-hover));
+    color: rgb(var(--cms-ink));
+}
+
+body .tox .tox-split-button.tox-tbtn--active,
+body .tox .tox-split-button.tox-tbtn--enabled {
+    background-color: rgb(var(--cms-hover));
+    color: rgb(var(--cms-ink));
+}
+
+body .tox .tox-split-button.tox-tbtn--disabled .tox-tbtn,
+body .tox .tox-split-button.tox-tbtn--disabled .tox-tbtn:hover,
+body .tox .tox-split-button.tox-tbtn--disabled:focus,
+body .tox .tox-split-button.tox-tbtn--disabled:hover {
+    background-color: transparent;
+    box-shadow: none;
+    color: rgb(var(--cms-ink-subtle) / 0.7);
+}
+
+body .tox .tox-split-button__chevron { width: 12px; }
+
+/* ── Status bar ────────────────────────────────────────────────── */
+body .tox .tox-statusbar {
+    background-color: rgb(var(--cms-surface));
+    border-top: 1px solid rgb(var(--cms-line));
+    color: rgb(var(--cms-ink-subtle));
+    font-size: 11px;
+    padding: 2px 8px 4px 0;
+}
+
+body .tox .tox-statusbar__path-item,
+body .tox .tox-statusbar__path-divider { color: rgb(var(--cms-ink-subtle)); }
+
+body .tox .tox-statusbar a,
+body .tox .tox-statusbar__wordcount,
+body .tox .tox-statusbar__branding,
+body .tox .tox-statusbar__help-text {
+    color: rgb(var(--cms-ink-subtle));
+}
+
+body .tox .tox-statusbar a:hover,
+body .tox .tox-statusbar a:focus-visible {
+    color: rgb(var(--cms-ink-muted));
+}
+
+body .tox .tox-statusbar__resize-handle {
+    color: rgb(var(--cms-ink-subtle));
+}
+
+body .tox .tox-statusbar__resize-handle svg { fill: currentColor; }
+
+/* ── Menu (dropdown dari menubar & tombol toolbar) ─────────────── */
+body .tox .tox-menu,
+body .tox .tox-listboxfield .tox-listbox {
+    background-color: rgb(var(--cms-surface));
+    border: 1px solid rgb(var(--cms-line));
+    border-radius: 6px;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    padding: 4px;
+}
+
+body .tox .tox-selected-menu { box-shadow: none; }
+
+body .tox .tox-collection--list .tox-collection__group {
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+}
+
+body .tox .tox-collection__item {
+    border-radius: 4px;
+    color: rgb(var(--cms-ink));
+    font-size: 13px;
+}
+
+body .tox .tox-collection__item-checkmark svg { fill: rgb(var(--cms-accent)); }
+body .tox .tox-collection__item-caret svg { fill: rgb(var(--cms-ink-muted)); }
+body .tox .tox-collection__item-accessory {
+    color: rgb(var(--cms-ink-subtle));
+    font-size: 11px;
+}
+
+body .tox .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled),
+body .tox .tox-collection--list .tox-collection__item--enabled:not(.tox-collection__item--state-disabled),
+body .tox .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled),
+body .tox .tox-collection--grid .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+    background-color: rgb(var(--cms-hover));
+    color: rgb(var(--cms-ink));
+}
+
+/* Skin memakai latar putih pada koleksi menu horizontal */
+body .tox .tox-collection--horizontal {
+    background-color: transparent;
+}
+
+body .tox .tox-collection__item--state-disabled,
+body .tox .tox-menu .tox-collection__item--state-disabled {
+    background-color: transparent;
+    color: rgb(var(--cms-ink-subtle));
+}
+
+body .tox .tox-menu__label {
+    color: rgb(var(--cms-ink-subtle));
+    font-size: 11px;
+}
+
+body .tox .tox-collection__group-heading,
+body .tox .tox-collection__group + .tox-collection__group {
+    border-color: rgb(var(--cms-line));
+}
+
+/* ── Dialog (insert link, image, dsb.) & backdrop ──────────────── */
+body .tox .tox-dialog-wrap__backdrop,
+body .tox-dialog-wrap__backdrop {
+    background-color: rgb(0 0 0 / 0.5);
+}
+
+/* Skin menyediakan varian opaque putih untuk dialog alert */
+body .tox .tox-dialog-wrap__backdrop--opaque,
+body .tox-dialog-wrap__backdrop--opaque {
+    background-color: rgb(0 0 0 / 0.5);
+}
+
+/* Elemen iframe area isian transparan supaya latar wadah terlihat
+   (mencegah kilatan putih pada mode gelap). */
+body .tox .tox-edit-area__iframe {
+    background-color: transparent;
+}
+
+body .tox .tox-dialog,
+body .tox-dialog {
+    background-color: rgb(var(--cms-surface));
+    border: 1px solid rgb(var(--cms-line));
+    border-radius: 6px;
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+body .tox .tox-dialog__header {
+    background-color: transparent;
+    padding: 14px 16px;
+}
+
+body .tox .tox-dialog__title {
+    color: rgb(var(--cms-ink));
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Tombol tutup (X) di pojok dialog */
+body .tox .tox-dialog__header .tox-button,
+body .tox .tox-dialog__header .tox-button--naked,
+body .tox .tox-dialog__header .tox-button--icon {
+    background-color: transparent;
+    border-color: transparent;
+    color: rgb(var(--cms-ink-muted));
+    box-shadow: none;
+}
+
+body .tox .tox-dialog__header .tox-button:hover,
+body .tox .tox-dialog__header .tox-button--naked:hover {
+    background-color: rgb(var(--cms-hover));
+    color: rgb(var(--cms-ink));
+}
+
+body .tox .tox-dialog__header .tox-button svg { fill: currentColor; }
+
+body .tox .tox-dialog__body { color: rgb(var(--cms-ink)); }
+
+body .tox .tox-dialog__body-content {
+    color: rgb(var(--cms-ink));
+}
+
+/* Tab dialog (mis. tab pada plugin media) */
+body .tox .tox-dialog__body-nav-item {
+    color: rgb(var(--cms-ink-muted));
+    font-size: 13px;
+    border-bottom: 2px solid transparent;
+    transition: color .15s ease, border-color .15s ease;
+}
+
+body .tox .tox-dialog__body-nav-item:hover { color: rgb(var(--cms-ink)); }
+
+body .tox .tox-dialog__body-nav-item--active {
+    color: rgb(var(--cms-accent));
+    border-bottom-color: rgb(var(--cms-accent));
+}
+
+body .tox .tox-dialog__body-nav--grouped .tox-dialog__body-nav-item:not(:hover):not(.tox-dialog__body-nav-item--active) {
+    background-color: transparent;
+}
+
+body .tox .tox-dialog__footer {
+    background-color: transparent;
+    border-top: 1px solid rgb(var(--cms-line));
+    padding: 12px 16px;
+}
+
+/* ── Tombol dialog: primer / sekunder / naked ──────────────────── */
+body .tox .tox-button {
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid rgb(var(--cms-accent));
+    border-radius: 6px;
+    background-color: rgb(var(--cms-accent));
+    color: rgb(var(--cms-accent-fg));
+    font-size: 12px;
+    font-weight: 500;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+
+body .tox .tox-button:hover:not([disabled]),
+body .tox .tox-button:focus:not([disabled]) {
+    background-color: rgb(var(--cms-accent-hover));
+    border-color: rgb(var(--cms-accent-hover));
+    color: rgb(var(--cms-accent-fg));
+    text-decoration: none;
+}
+
+body .tox .tox-button:focus:not([disabled]) {
+    outline: none;
+    border-color: rgb(var(--cms-accent));
+    box-shadow: 0 0 0 3px rgb(var(--cms-accent) / 0.25);
+}
+
+body .tox .tox-button--secondary,
+body .tox .tox-button--naked[style] { /* fallback guard */
+    border: 1px solid rgb(var(--cms-line-strong));
+    background-color: rgb(var(--cms-surface));
+    color: rgb(var(--cms-ink));
+    box-shadow: none;
+}
+
+body .tox .tox-button--secondary:hover:not(:disabled):not([disabled]),
+body .tox .tox-button--secondary:focus:not([disabled]) {
+    border-color: rgb(var(--cms-line-strong));
+    background-color: rgb(var(--cms-hover));
+    color: rgb(var(--cms-ink));
+}
+
+body .tox .tox-button--naked {
+    border: 0;
+    background-color: transparent;
+    color: rgb(var(--cms-ink-muted));
+    box-shadow: none;
+}
+
+body .tox .tox-button--naked:hover:not(:disabled):not([disabled]),
+body .tox .tox-button--naked:focus:not([disabled]) {
+    border: 0;
+    background-color: rgb(var(--cms-hover));
+    color: rgb(var(--cms-ink));
+}
+
+body .tox .tox-button[disabled] {
+    background-color: rgb(var(--cms-accent));
+    color: rgb(var(--cms-accent-fg));
+    border-color: rgb(var(--cms-accent));
+    opacity: .5;
+}
+
+body .tox .tox-button--secondary[disabled] {
+    background-color: rgb(var(--cms-surface));
+    border-color: rgb(var(--cms-line-strong));
+    color: rgb(var(--cms-ink-subtle));
+}
+
+body .tox .tox-button svg { fill: currentColor; }
+
+/* ── Field dialog: textfield, textarea, select ─────────────────── */
+body .tox .tox-textfield,
+body .tox .tox-textarea,
+body .tox .tox-textarea-affix,
+body .tox .tox-input-wrap,
+body .tox .tox-listboxfield .tox-listbox,
+body .tox .tox-slider__rail,
+body .tox .tox-search-dialog__term {
+    background-color: rgb(var(--cms-surface));
+    border: 1px solid rgb(var(--cms-line-strong));
+    border-radius: 6px;
+    color: rgb(var(--cms-ink));
+    font-size: 13px;
+}
+
+body .tox .tox-textfield,
+body .tox .tox-listboxfield .tox-listbox,
+body .tox .tox-input-wrap {
+    height: 32px;
+    padding: 0 9px;
+}
+
+body .tox .tox-textarea { padding: 8px 9px; }
+
+body .tox .tox-textfield:focus,
+body .tox .tox-textarea:focus,
+body .tox .tox-input-wrap:focus-within,
+body .tox .tox-listboxfield .tox-listbox:focus {
+    outline: none;
+    border-color: rgb(var(--cms-accent));
+    box-shadow: 0 0 0 3px rgb(var(--cms-accent) / 0.25);
+    /* Skin memaksa latar putih pada elemen fokus */
+    background-color: rgb(var(--cms-surface));
+}
+
+body .tox .tox-textfield::placeholder,
+body .tox .tox-textarea::placeholder { color: rgb(var(--cms-ink-subtle)); }
+
+body .tox .tox-input-wrap__affix { color: rgb(var(--cms-ink-subtle)); }
+
+body .tox .tox-selectfield select {
+    background-color: rgb(var(--cms-surface));
+    border: 1px solid rgb(var(--cms-line-strong));
+    border-radius: 6px;
+    color: rgb(var(--cms-ink));
+    font-size: 13px;
+}
+
+body .tox .tox-selectfield select:focus {
+    outline: none;
+    border-color: rgb(var(--cms-accent));
+    box-shadow: 0 0 0 3px rgb(var(--cms-accent) / 0.25);
+    background-color: rgb(var(--cms-surface));
+}
+
+body .tox .tox-listbox__select-chevron svg { fill: rgb(var(--cms-ink-muted)); }
+
+body .tox .tox-label {
+    color: rgb(var(--cms-ink));
+    font-size: 12px;
+    font-weight: 500;
+}
+
+body .tox .tox-form__group--invalid .tox-textfield,
+body .tox .tox-form__group--invalid .tox-textarea {
+    border-color: rgb(var(--cms-danger));
+}
+
+/* Checkbox & radio */
+body .tox .tox-checkbox__icons .tox-checkbox__unchecked svg { fill: rgb(var(--cms-line-strong)); }
+body .tox .tox-checkbox__icons .tox-checkbox__checked svg,
+body .tox .tox-checkbox .tox-checkbox__icons .tox-checkbox__checked {
+    fill: rgb(var(--cms-accent));
+    color: rgb(var(--cms-accent));
+}
+
+body .tox .tox-radiobutton__radio {
+    border: 1px solid rgb(var(--cms-line-strong));
+}
+
+body .tox .tox-radiobutton__icon .tox-radiobutton__checked,
+body .tox .tox-radiobutton.tox-radiobutton--checked .tox-radiobutton__radio {
+    background-color: rgb(var(--cms-accent));
+    border-color: rgb(var(--cms-accent));
+}
+
+body .tox .tox-checkbox__label,
+body .tox .tox-radiobutton__label {
+    color: rgb(var(--cms-ink));
+    font-size: 13px;
+}
+
+/* ── Notifikasi dalam editor ───────────────────────────────────── */
+body .tox .tox-notification {
+    background-color: rgb(var(--cms-surface));
+    border: 1px solid rgb(var(--cms-line));
+    border-radius: 6px;
+    box-shadow: none;
+    color: rgb(var(--cms-ink-muted));
+}
+
+body .tox .tox-notification svg { fill: currentColor; }
+
+body .tox .tox-notification--info { border-color: rgb(var(--cms-line)); }
+body .tox .tox-notification--warning {
+    border-color: rgb(var(--cms-accent) / 0.4);
+    background-color: rgb(var(--cms-accent-soft));
+}
+body .tox .tox-notification--error {
+    border-color: rgb(var(--cms-danger) / 0.4);
+    background-color: rgb(var(--cms-danger) / 0.1);
+}
+body .tox .tox-notification--success {
+    border-color: rgb(var(--cms-accent) / 0.4);
+    background-color: rgb(var(--cms-accent-soft));
+}
+
+body .tox .tox-notification__body > * > a {
+    color: rgb(var(--cms-ink));
+    text-decoration: underline;
+}
+
+/* ── Popover inline (pop) ──────────────────────────────────────── */
+body .tox .tox-pop {
+    box-shadow: 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+body .tox .tox-pop__dialog {
+    background-color: rgb(var(--cms-surface));
+    border: 1px solid rgb(var(--cms-line));
+    border-radius: 6px;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+body .tox .tox-pop__dialog .tox-toolbar__group { padding: 4px 6px; }
+
+/* ── Warna & picker ────────────────────────────────────────────── */
+body .tox .tox-color-picker-container .tox-color-swatch-container-item,
+body .tox .tox-swatches .tox-swatch {
+    border: 1px solid rgb(var(--cms-line));
+    border-radius: 4px;
+    box-shadow: none;
+}
+
+body .tox .tox-swatches__picker-btn,
+body .tox .tox-color-thumb {
+    border-color: rgb(var(--cms-line-strong));
+}
+
+body .tox .tox-conversations, /* guard lama */
+body .tox .tox-dropzone {
+    background-color: rgb(var(--cms-hover));
+    border: 1px dashed rgb(var(--cms-line-strong));
+    border-radius: 6px;
+    color: rgb(var(--cms-ink-muted));
+}
+
+/* Tabel penyisipan tabel */
+body .tox .tox-insert-table-picker {
+    background-color: rgb(var(--cms-surface));
+    border: 1px solid rgb(var(--cms-line));
+    border-radius: 6px;
+}
+
+body .tox .tox-insert-table-picker__selected {
+    background-color: rgb(var(--cms-accent));
+    border-color: rgb(var(--cms-accent));
+}
+
+/* Accordion plugin */
+body .tox .tox-accordion__header {
+    background-color: rgb(var(--cms-surface));
+    color: rgb(var(--cms-ink));
+}
+
+body .tox .tox-accordion__header:hover,
+body .tox .tox-accordion__header--open {
+    background-color: rgb(var(--cms-hover));
+}
+
+/* Keyboard shortcut di dialog Help */
+body .tox .tox-kbd {
+    background-color: rgb(var(--cms-hover));
+    border: 1px solid rgb(var(--cms-line-strong));
+    border-radius: 4px;
+    color: rgb(var(--cms-ink-muted));
+    font-size: 11px;
+}
+
+/* ── Scrollbar mengikuti gaya CMS ──────────────────────────────── */
+body .tox-dialog__body-content::-webkit-scrollbar,
+body .tox-menu::-webkit-scrollbar,
+body .tox-dialog-wrap__dialog::-webkit-scrollbar {
+    width: 8px;
+}
+
+body .tox-dialog__body-content::-webkit-scrollbar-thumb,
+body .tox-menu::-webkit-scrollbar-thumb,
+body .tox-dialog-wrap__dialog::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--cms-line-strong));
+    border-radius: 4px;
+}
+
+/* Cincin fokus global di dalam UI TinyMCE */
+body .tox :focus {
+    outline: none;
+}
+
+body .tox .tox-menu .tox-collection__item--active:focus-visible {
+    outline: 2px solid rgb(var(--cms-accent));
+    outline-offset: -2px;
+}

@@ -11,7 +11,6 @@ use Livewire\WithPagination;
 class FrontendInfographic extends Component
 {
     public $paginate = 10;
-    public $period = '';
 
     /**
      * Kategori infografis. Default kosong = semua, supaya membuka halaman ini
@@ -27,14 +26,10 @@ class FrontendInfographic extends Component
 
     /*
      * Bulan data infografis. Entri lama tak punya `period`, jadi bulannya
-     * diambil dari publishdate — satu ekspresi ini dipakai untuk urutan,
-     * saringan, dan daftar pilihan supaya ketiganya tak bisa berbeda.
+     * diambil dari publishdate — satu ekspresi ini dipakai untuk urutan
+     * supaya pengelompokan bulan konsisten.
      */
     private const MONTH = "COALESCE(period, substr(publishdate, 1, 7))";
-
-    public function updatedPeriod(){
-        $this->resetPage();
-    }
 
     public function updatedCategory($value){
         if ($value !== '' && ! in_array($value, self::KATEGORI)) {
@@ -58,19 +53,9 @@ class FrontendInfographic extends Component
         ->where('status', 1);
     }
 
-    /** Bulan yang benar-benar ada isinya, terbaru dulu. */
-    public function getPeriods(){
-        return $this->published()
-        ->selectRaw(self::MONTH . ' as period')
-        ->distinct()
-        ->orderByRaw(self::MONTH . ' desc')
-        ->pluck('period');
-    }
-
     public function getInfographics(){
         return $this->published()
         ->selectRaw($this->getSelectInfographic())
-        ->when($this->period, fn ($q) => $q->whereRaw(self::MONTH . ' = ?', [$this->period]))
         ->when(in_array($this->category, self::KATEGORI), fn ($q) => $q->where('category', $this->category))
         // Bulan dulu supaya periode tak berselang-seling, lalu publishdate
         // agar urutan di dalam satu bulan tetap seperti sebelumnya.
@@ -92,7 +77,6 @@ class FrontendInfographic extends Component
         $data = $this->getInfographics();
         return view('livewire.frontend-infographic', [
             'data' => $data,
-            'periods' => $this->getPeriods(),
         ]);
     }
 }

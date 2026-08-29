@@ -1,9 +1,3 @@
-@extends('layouts.dashboardLayouts')
-
-@section('content')
-    @include('partials.backendHeader')
-    @include('partials.backendNav')
-    <div class="max-w-6xl mx-auto px-6 md:px-8 sm:py-16 py-8 min-h-screen">
-        <livewire:downloads-component />
-    </div>
-@endsection
+<x-cms-layout title="Downloads page">
+    <livewire:downloads-component />
+</x-cms-layout>

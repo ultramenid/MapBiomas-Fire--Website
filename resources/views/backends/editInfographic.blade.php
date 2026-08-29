@@ -1,7 +1,3 @@
-@extends('layouts.dashboardLayouts')
-
-@section('content')
-    @include('partials.backendHeader')
-    @include('partials.backendNav')
+<x-cms-layout title="Edit infographic">
     <livewire:edit-infographic-component :id="$idInfographic" />
-@endsection
+</x-cms-layout>

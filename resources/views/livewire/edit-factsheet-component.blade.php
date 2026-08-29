@@ -1,130 +1,131 @@
-<form wire:submit="storeAksi" x-data="{lang:'english'}" class="max-w-4xl mx-auto px-6 md:px-8 min-h-screen">
+<div>
+    <x-cms.page-header title="Edit factsheet" description="Update the monthly or annual factsheet.">
+        <x-slot:actions>
+            <x-cms.button variant="secondary" href="{{ route('cms.factsheet.index') }}">Cancel</x-cms.button>
+            <x-cms.button wire:click="storeAksi" loadingTarget="storeAksi">Save</x-cms.button>
+        </x-slot:actions>
+    </x-cms.page-header>
 
-    <div class=" border-b border-gray-300 dark:border-opacity-20 py-16 mb-6">
-        <div class="max-w-4xl mx-auto px-6  flex justify-between ">
-            <h1 class="sm:text-4xl text-xl text-newgray-900 dark:text-newgray-300 font-semibold ">edit factsheet</h1>
-            <div class="z-30">
-                <button type="submit" wire:loading.remove wire:target='storeAksi' id="btnStore" class="inline-flex sm:px-16 px-8 sm:py-2 py-1 rounded dark:hover:bg-newgray-900 dark:hover:border-gray-200 dark:hover:text-gray-200 hover:bg-white hover:text-newgray-900 border hover:border-newgray-900 bg-newgray-900 dark:bg-gray-100 text-newgray-100 dark:text-newgray-900">
-                    Save
-                </button>
-                <button type="button" disabled wire:loading wire:target='storeAksi' id="btnStore" class="inline-flex sm:px-16 px-8 sm:py-2 py-1 rounded dark:hover:bg-newgray-900 dark:hover:border-gray-200 dark:hover:text-gray-200 hover:bg-white hover:text-newgray-900 border hover:border-newgray-900 bg-newgray-900 dark:bg-gray-100 text-newgray-100 dark:text-newgray-900">
-                    <svg class="animate-spin mx-auto h-6 w-6 " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                </button>
+    <div class="max-w-3xl space-y-4">
+        <x-cms.panel title="Details">
+            <div class="grid gap-4 sm:grid-cols-2">
+                <div>
+                    <span class="mb-1.5 block text-xs font-medium text-ink">Category</span>
+                    <div class="relative">
+                        <select wire:model="category"
+                                class="h-8 w-full appearance-none rounded-md border border-line-strong bg-surface pl-2.5 pr-7 text-sm text-ink cms-focus">
+                            <option value="annual">Annual</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                        <svg class="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-ink-muted"
+                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m6 9 6 6 6-6" />
+                        </svg>
+                    </div>
+                </div>
             </div>
+        </x-cms.panel>
+
+        <x-cms.form-tabs>
+            <x-slot:en>
+                <x-cms.panel title="English">
+                    <div class="space-y-4">
+                        <div>
+                            <label for="titleEN" class="mb-1.5 block text-xs font-medium text-ink">Title</label>
+                            <input id="titleEN" type="text" wire:model="titleEN" placeholder="Factsheet title…"
+                                   class="h-8 w-full rounded-md border border-line-strong bg-surface px-2.5 text-sm text-ink placeholder:text-ink-subtle cms-focus">
+                        </div>
+                        <div>
+                            <label for="descriptionEN" class="mb-1.5 block text-xs font-medium text-ink">Description</label>
+                            <textarea id="descriptionEN" rows="3" wire:model="descriptionEN" placeholder="Short description…"
+                                      class="w-full rounded-md border border-line-strong bg-surface px-2.5 py-2 text-sm text-ink placeholder:text-ink-subtle cms-focus"></textarea>
+                        </div>
+                        <div>
+                            <label for="linkEN" class="mb-1.5 block text-xs font-medium text-ink">
+                                Link <span class="font-normal text-ink-muted">(optional if a PDF is uploaded)</span>
+                            </label>
+                            <input id="linkEN" type="url" wire:model="linkEN" placeholder="https://… (pdf / download page)"
+                                   class="h-8 w-full rounded-md border border-line-strong bg-surface px-2.5 text-sm text-ink placeholder:text-ink-subtle cms-focus">
+                        </div>
+                        <div>
+                            <span class="mb-1.5 block text-xs font-medium text-ink">PDF file</span>
+                            <div x-data="{ isUploading: false, progress: 0 }"
+                                 x-on:livewire-upload-start="isUploading = true; progress = 0"
+                                 x-on:livewire-upload-progress="progress = $event.detail.progress"
+                                 x-on:livewire-upload-finish="isUploading = false"
+                                 x-on:livewire-upload-error="isUploading = false"
+                                 x-on:livewire-upload-cancel="isUploading = false">
+                                <input type="file" wire:model="pdfEN" accept="application/pdf"
+                                       class="block w-full cursor-pointer rounded-md border border-line-strong bg-surface text-sm text-ink-muted
+                                              file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-hover file:px-3 file:py-1.5
+                                              file:text-xs file:font-medium file:text-ink hover:file:bg-line cms-focus">
+                                <p class="mt-1.5 text-xs text-ink-muted">
+                                    @if ($pdfEN)
+                                        Selected: {{ $pdfEN->getClientOriginalName() }}
+                                    @elseif (! empty($updfEN))
+                                        Current: {{ $updfEN }}
+                                    @else
+                                        Click to upload a PDF (max 50MB).
+                                    @endif
+                                </p>
+                                @include('partials.uploadProgress')
+                            </div>
+                        </div>
+                    </div>
+                </x-cms.panel>
+            </x-slot:en>
+            <x-slot:idn>
+                <x-cms.panel title="Indonesia">
+                    <div class="space-y-4">
+                        <div>
+                            <label for="titleID" class="mb-1.5 block text-xs font-medium text-ink">Judul</label>
+                            <input id="titleID" type="text" wire:model="titleID" placeholder="Judul factsheet…"
+                                   class="h-8 w-full rounded-md border border-line-strong bg-surface px-2.5 text-sm text-ink placeholder:text-ink-subtle cms-focus">
+                        </div>
+                        <div>
+                            <label for="descriptionID" class="mb-1.5 block text-xs font-medium text-ink">Deskripsi</label>
+                            <textarea id="descriptionID" rows="3" wire:model="descriptionID" placeholder="Deskripsi singkat…"
+                                      class="w-full rounded-md border border-line-strong bg-surface px-2.5 py-2 text-sm text-ink placeholder:text-ink-subtle cms-focus"></textarea>
+                        </div>
+                        <div>
+                            <label for="linkID" class="mb-1.5 block text-xs font-medium text-ink">
+                                Tautan <span class="font-normal text-ink-muted">(opsional bila PDF diunggah)</span>
+                            </label>
+                            <input id="linkID" type="url" wire:model="linkID" placeholder="https://… (pdf / halaman unduh)"
+                                   class="h-8 w-full rounded-md border border-line-strong bg-surface px-2.5 text-sm text-ink placeholder:text-ink-subtle cms-focus">
+                        </div>
+                        <div>
+                            <span class="mb-1.5 block text-xs font-medium text-ink">Berkas PDF</span>
+                            <div x-data="{ isUploading: false, progress: 0 }"
+                                 x-on:livewire-upload-start="isUploading = true; progress = 0"
+                                 x-on:livewire-upload-progress="progress = $event.detail.progress"
+                                 x-on:livewire-upload-finish="isUploading = false"
+                                 x-on:livewire-upload-error="isUploading = false"
+                                 x-on:livewire-upload-cancel="isUploading = false">
+                                <input type="file" wire:model="pdfID" accept="application/pdf"
+                                       class="block w-full cursor-pointer rounded-md border border-line-strong bg-surface text-sm text-ink-muted
+                                              file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-hover file:px-3 file:py-1.5
+                                              file:text-xs file:font-medium file:text-ink hover:file:bg-line cms-focus">
+                                <p class="mt-1.5 text-xs text-ink-muted">
+                                    @if ($pdfID)
+                                        Dipilih: {{ $pdfID->getClientOriginalName() }}
+                                    @elseif (! empty($updfID))
+                                        Saat ini: {{ $updfID }}
+                                    @else
+                                        Klik untuk mengunggah PDF (maks 50MB).
+                                    @endif
+                                </p>
+                                @include('partials.uploadProgress')
+                            </div>
+                        </div>
+                    </div>
+                </x-cms.panel>
+            </x-slot:idn>
+        </x-cms.form-tabs>
+
+        <div class="mt-8 flex items-center justify-end gap-2 border-t border-line pt-5">
+            <x-cms.button variant="secondary" href="{{ route('cms.factsheet.index') }}">Cancel</x-cms.button>
+            <x-cms.button wire:click="storeAksi" loadingTarget="storeAksi">Save</x-cms.button>
         </div>
     </div>
-
-    <h1 class="text-xl font-semibold  text-newbg-newgray-900 dark:text-gray-300 mb-4">Category</h1>
-    <label class="w-full mb-6 block" >
-        <select wire:model='category' class=" bg-gray-100 dark:bg-newgray-700 text-newgray-700 dark:text-gray-300 rounded w-full border  py-2 px-4 focus:outline-none border-gray-300 dark:border-opacity-20">
-            <option value="annual">Annual</option>
-            <option value="monthly">Monthly</option>
-        </select>
-    </label>
-
-    <div  class="overflow-x-auto scrollbar-hide whitespace-nowrap   subpixel-antialiased flex mb-6 justify-end">
-        {{-- tabs english --}}
-        <div @click="lang='english'" class="hover:bg-gray-200 dark:hover:bg-newgray-700 py-2 px-2 rounded  cursor-pointer"
-        :class="{ 'border-b-2 border-newgray-900 dark:border-gray-300' : lang === 'english' }"
-        >
-            <a  class=" px-0.5  text-newgray-900 dark:text-gray-400 text-sm   hover:text-newgray-900 dark:hover:text-gray-300 "
-            :class="{ 'font-black' : lang === 'english' }"
-            >English</a>
-        </div>
-        {{-- lang indonesia --}}
-        <div @click="lang='indonesia'" class="hover:bg-gray-200 dark:hover:bg-newgray-700 py-2 px-2 rounded  cursor-pointer"
-        :class="{ 'border-b-2 border-newgray-900 dark:border-gray-300' : lang === 'indonesia' }"
-        >
-            <a  class=" px-0.5  text-newgray-900 dark:text-gray-400 text-sm   hover:text-newgray-900 dark:hover:text-gray-300 "
-            :class="{ 'font-bold' : lang === 'indonesia' }"
-            >Indonesia</a>
-        </div>
-
-    </div>
-
-    <div x-show="lang==='english'" x-cloak style="display: none !important">
-        <div class="w-full border border-gray-300 dark:border-opacity-20 rounded px-6 py-6 mb-6">
-            <label class="block mb-4">
-                <span class="block text-sm font-semibold text-newgray-900 dark:text-gray-300 mb-2">Title</span>
-                <input type="text" wire:model='titleEN' placeholder="Factsheet title (english)" class="bg-gray-100 dark:bg-newgray-700 text-newgray-700 dark:text-gray-300 rounded w-full border border-gray-300 dark:border-opacity-20 py-2 px-4 focus:outline-none">
-            </label>
-            <label class="block">
-                <span class="block text-sm font-semibold text-newgray-900 dark:text-gray-300 mb-2">Description</span>
-                <textarea rows="4" wire:model='descriptionEN' placeholder="Short description (english)" class="bg-gray-100 dark:bg-newgray-700 text-newgray-700 dark:text-gray-300 rounded w-full border border-gray-300 dark:border-opacity-20 py-2 px-4 focus:outline-none"></textarea>
-            </label>
-
-            <label class="block mb-4">
-                <span class="block text-sm font-semibold text-newgray-900 dark:text-gray-300 mb-2">Link <span class="font-normal text-gray-400">(optional if a PDF is uploaded)</span></span>
-                <input type="url" wire:model='linkEN' placeholder="https://... (pdf / download page)" class="bg-gray-100 dark:bg-newgray-700 text-newgray-700 dark:text-gray-300 rounded w-full border border-gray-300 dark:border-opacity-20 py-2 px-4 focus:outline-none">
-            </label>
-            <span class="block text-sm font-semibold text-newgray-900 dark:text-gray-300 mb-2">PDF file</span>
-            <label class="cursor-pointer block"
-                   x-data="{ isUploading: false, progress: 0 }"
-                   x-on:livewire-upload-start="isUploading = true; progress = 0"
-                   x-on:livewire-upload-progress="progress = $event.detail.progress"
-                   x-on:livewire-upload-finish="isUploading = false"
-                   x-on:livewire-upload-error="isUploading = false"
-                   x-on:livewire-upload-cancel="isUploading = false">
-                <input type="file" class="hidden" wire:model.live='pdfEN' accept="application/pdf" />
-                <div class="border border-dashed border-gray-300 dark:border-opacity-20 rounded py-6 px-4 text-center">
-                    @if ($pdfEN)
-                        <p class="text-sm text-newgray-900 dark:text-gray-300 break-all">{{ $pdfEN->getClientOriginalName() }}</p>
-                    @elseif (!empty($updfEN))
-                        <p class="text-sm text-newgray-900 dark:text-gray-300 break-all">{{ $updfEN }}</p>
-                    @else
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                        </svg>
-                    @endif
-                    <p wire:loading.remove wire:target="pdfEN" class="text-xs text-center text-gray-400 mt-2">Click to upload PDF (max 50MB)</p>
-                </div>
-                @include('partials.uploadProgress')
-            </label>
-        </div>
-    </div>
-
-    <div x-show="lang==='indonesia'" x-cloak style="display: none !important">
-        <div class="w-full border border-gray-300 dark:border-opacity-20 rounded px-6 py-6 mb-6">
-            <label class="block mb-4">
-                <span class="block text-sm font-semibold text-newgray-900 dark:text-gray-300 mb-2">Judul</span>
-                <input type="text" wire:model='titleID' placeholder="Judul factsheet (indonesia)" class="bg-gray-100 dark:bg-newgray-700 text-newgray-700 dark:text-gray-300 rounded w-full border border-gray-300 dark:border-opacity-20 py-2 px-4 focus:outline-none">
-            </label>
-            <label class="block">
-                <span class="block text-sm font-semibold text-newgray-900 dark:text-gray-300 mb-2">Deskripsi</span>
-                <textarea rows="4" wire:model='descriptionID' placeholder="Deskripsi singkat (indonesia)" class="bg-gray-100 dark:bg-newgray-700 text-newgray-700 dark:text-gray-300 rounded w-full border border-gray-300 dark:border-opacity-20 py-2 px-4 focus:outline-none"></textarea>
-            </label>
-
-            <label class="block mb-4">
-                <span class="block text-sm font-semibold text-newgray-900 dark:text-gray-300 mb-2">Tautan <span class="font-normal text-gray-400">(opsional bila PDF diunggah)</span></span>
-                <input type="url" wire:model='linkID' placeholder="https://... (pdf / halaman unduh)" class="bg-gray-100 dark:bg-newgray-700 text-newgray-700 dark:text-gray-300 rounded w-full border border-gray-300 dark:border-opacity-20 py-2 px-4 focus:outline-none">
-            </label>
-            <span class="block text-sm font-semibold text-newgray-900 dark:text-gray-300 mb-2">Berkas PDF</span>
-            <label class="cursor-pointer block"
-                   x-data="{ isUploading: false, progress: 0 }"
-                   x-on:livewire-upload-start="isUploading = true; progress = 0"
-                   x-on:livewire-upload-progress="progress = $event.detail.progress"
-                   x-on:livewire-upload-finish="isUploading = false"
-                   x-on:livewire-upload-error="isUploading = false"
-                   x-on:livewire-upload-cancel="isUploading = false">
-                <input type="file" class="hidden" wire:model.live='pdfID' accept="application/pdf" />
-                <div class="border border-dashed border-gray-300 dark:border-opacity-20 rounded py-6 px-4 text-center">
-                    @if ($pdfID)
-                        <p class="text-sm text-newgray-900 dark:text-gray-300 break-all">{{ $pdfID->getClientOriginalName() }}</p>
-                    @elseif (!empty($updfID))
-                        <p class="text-sm text-newgray-900 dark:text-gray-300 break-all">{{ $updfID }}</p>
-                    @else
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                        </svg>
-                    @endif
-                    <p wire:loading.remove wire:target="pdfID" class="text-xs text-center text-gray-400 mt-2">Klik untuk mengunggah PDF (maks 50MB)</p>
-                </div>
-                @include('partials.uploadProgress')
-            </label>
-        </div>
-    </div>
-
-</form>
+</div>

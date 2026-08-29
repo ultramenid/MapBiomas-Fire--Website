@@ -2,7 +2,9 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 export default {
-    darkMode: 'false',
+    /* 'class': CMS memakai mode gelap berbasis .dark pada <html> (localStorage
+       cms-theme). Situs publik tidak pernah menambahkan .dark, jadi tetap netral. */
+    darkMode: 'class',
     content: [
         "./resources/**/*.blade.php",
         "./resources/**/*.js",
@@ -12,6 +14,23 @@ export default {
   theme: {
     extend: {
         colors: {
+            /* ── Token desain CMS (gaya Vercel monokrom + aksen hijau) ──
+               Nilai RGB triplet di-flip oleh app.css via .dark, sehingga
+               modifier alpha (bg-hover/50, bg-danger/10, …) tetap jalan. */
+            canvas: 'rgb(var(--cms-canvas) / <alpha-value>)',
+            surface: 'rgb(var(--cms-surface) / <alpha-value>)',
+            line: 'rgb(var(--cms-line) / <alpha-value>)',
+            'line-strong': 'rgb(var(--cms-line-strong) / <alpha-value>)',
+            ink: 'rgb(var(--cms-ink) / <alpha-value>)',
+            'ink-muted': 'rgb(var(--cms-ink-muted) / <alpha-value>)',
+            'ink-subtle': 'rgb(var(--cms-ink-subtle) / <alpha-value>)',
+            hover: 'rgb(var(--cms-hover) / <alpha-value>)',
+            accent: 'rgb(var(--cms-accent) / <alpha-value>)',
+            'accent-hover': 'rgb(var(--cms-accent-hover) / <alpha-value>)',
+            'accent-fg': 'rgb(var(--cms-accent-fg) / <alpha-value>)',
+            'accent-soft': 'rgb(var(--cms-accent-soft) / <alpha-value>)',
+            danger: 'rgb(var(--cms-danger) / <alpha-value>)',
+            'danger-hover': 'rgb(var(--cms-danger-hover) / <alpha-value>)',
             newgray: {
                 50: '#f9fafb',
                 100: '#f4f5f7',

@@ -35,26 +35,26 @@ Route::middleware([setLanguage::class])->group(function () {
 
 //redirect to login page if user has no session
 Route::middleware([checkSession::class])->group(function () {
-    Route::get('/cms/dashboard', [DashboardController::class, 'index']);
-    Route::get('/cms/listfaq', [FaqController::class, 'index']);
-    Route::get('/cms/addfaq', [FaqController::class, 'add']);
-    Route::get('/cms/editfaq/{id}', [FaqController::class, 'edit']);
-    Route::get('/cms/listnews', [NewsController::class, 'index']);
-    Route::get('/cms/listinfographic', [InfographicController::class, 'index']);
-    Route::get('/cms/addinfographic', [InfographicController::class, 'addinfographic']);
-    Route::get('/cms/editinfographic/{id}', [InfographicController::class, 'edit']);
-    Route::get('/cms/addnews', [NewsController::class, 'add']);
-    Route::get('/cms/editnews/{id}', [NewsController::class, 'edit']);
-    Route::get('/cms/previewnews/{id}', [NewsController::class, 'previewnews']);
-    Route::get('/cms/previewcardnews/{id}', [NewsController::class, 'previewcardnews']);
-    Route::get('/cms/pageabout', [PagesController::class, 'cmsabout']);
-    Route::get('/cms/termofuse', [PagesController::class, 'cmstermofuse']);
-    Route::get('/cms/cmsrefrencemap', [PagesController::class, 'cmsrefrencemap']);
-    Route::get('/cms/cmsatbd', [PagesController::class, 'cmsatbd']);
-    Route::get('/cms/cmsdownload', [PagesController::class, 'cmsdownloads']);
-    Route::get('/cms/listfactsheet', [FactsheetController::class, 'index']);
-    Route::get('/cms/addfactsheet', [FactsheetController::class, 'add']);
-    Route::get('/cms/editfactsheet/{id}', [FactsheetController::class, 'edit']);
+    Route::get('/cms/dashboard', [DashboardController::class, 'index'])->name('cms.dashboard');
+    Route::get('/cms/listfaq', [FaqController::class, 'index'])->name('cms.faq.index');
+    Route::get('/cms/addfaq', [FaqController::class, 'add'])->name('cms.faq.create');
+    Route::get('/cms/editfaq/{id}', [FaqController::class, 'edit'])->name('cms.faq.edit');
+    Route::get('/cms/listnews', [NewsController::class, 'index'])->name('cms.news.index');
+    Route::get('/cms/listinfographic', [InfographicController::class, 'index'])->name('cms.infographic.index');
+    Route::get('/cms/addinfographic', [InfographicController::class, 'addinfographic'])->name('cms.infographic.create');
+    Route::get('/cms/editinfographic/{id}', [InfographicController::class, 'edit'])->name('cms.infographic.edit');
+    Route::get('/cms/addnews', [NewsController::class, 'add'])->name('cms.news.create');
+    Route::get('/cms/editnews/{id}', [NewsController::class, 'edit'])->name('cms.news.edit');
+    Route::get('/cms/previewnews/{id}', [NewsController::class, 'previewnews'])->name('cms.news.preview');
+    Route::get('/cms/previewcardnews/{id}', [NewsController::class, 'previewcardnews'])->name('cms.news.preview-card');
+    Route::get('/cms/pageabout', [PagesController::class, 'cmsabout'])->name('cms.pages.about');
+    Route::get('/cms/termofuse', [PagesController::class, 'cmstermofuse'])->name('cms.pages.termofuse');
+    Route::get('/cms/cmsrefrencemap', [PagesController::class, 'cmsrefrencemap'])->name('cms.pages.refrencemap');
+    Route::get('/cms/cmsatbd', [PagesController::class, 'cmsatbd'])->name('cms.pages.atbd');
+    Route::get('/cms/cmsdownload', [PagesController::class, 'cmsdownloads'])->name('cms.pages.downloads');
+    Route::get('/cms/listfactsheet', [FactsheetController::class, 'index'])->name('cms.factsheet.index');
+    Route::get('/cms/addfactsheet', [FactsheetController::class, 'add'])->name('cms.factsheet.create');
+    Route::get('/cms/editfactsheet/{id}', [FactsheetController::class, 'edit'])->name('cms.factsheet.edit');
 
     Route::group(['prefix' => '/cms/fire-filemanager'], function () {
         \UniSharp\LaravelFilemanager\Lfm::routes();
