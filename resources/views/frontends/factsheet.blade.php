@@ -34,29 +34,20 @@
                         if ($href === '#') $href = null;
                         // Sampul selalu lewat proxy satu-origin: berkas lokal
                         // dilayani langsung, tautan luar di-proxy agar lolos CORS.
-                        $hasSource = $sheet->file
-                            || (is_string($sheet->link) && str_starts_with($sheet->link, 'http'));
-                        $thumb = $hasSource
-                            ? route('factsheet.file', ['id' => $sheet->id, 'lang' => app()->getLocale()], false)
-                            : null;
+                        // Fallback antar bahasa (PDF ID ↔ EN) ditangani
+                        // FactsheetController::file, jadi canvas selalu dirender.
+                        $thumb = route('factsheet.file', ['id' => $sheet->id, 'lang' => app()->getLocale()], false);
                     @endphp
                     <div class="py-6 first:pt-0 last:pb-0 flex gap-4 sm:gap-6">
-                        {{-- Sampul: halaman pertama PDF yang diunggah (dirender
-                             di peramban). Entri tautan luar dapat placeholder. --}}
-                        @if ($thumb)
-                            {{-- self-stretch + object-cover: tinggi sampul selalu
-                                 mengikuti kolom teks, sisi ter-crop proporsional. --}}
-                            <div class="w-36 sm:w-60 shrink-0 self-stretch overflow-hidden rounded border border-gray-200 bg-gray-100 min-h-[140px]">
-                                <canvas data-pdf-thumb="{{ $thumb }}"
-                                        class="block h-full w-full object-cover"></canvas>
-                            </div>
-                        @else
-                            <div class="flex w-36 sm:w-60 shrink-0 self-stretch min-h-[140px] items-center justify-center rounded border border-gray-200 bg-gray-100">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-8 w-8 text-gray-400">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                                </svg>
-                            </div>
-                        @endif
+                        {{-- Sampul: halaman pertama PDF, dirender di peramban.
+                             self-stretch + object-cover: tinggi sampul selalu
+                             mengikuti kolom teks, sisi ter-crop proporsional.
+                             Baris tanpa sumber sama sekali ditangani placeholder
+                             JS saat fetch 404. --}}
+                        <div class="w-36 sm:w-60 shrink-0 self-stretch overflow-hidden rounded border border-gray-200 bg-gray-100 min-h-[140px]">
+                            <canvas data-pdf-thumb="{{ $thumb }}"
+                                    class="block h-full w-full object-cover"></canvas>
+                        </div>
                         <div class="flex min-w-0 flex-1 flex-col gap-2">
                             <span class="inline-flex w-fit items-center rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-medium text-red-600">
                                 {{ ($sheet->category ?? '') === 'monthly' ? __('Monthly') : __('Annual') }}

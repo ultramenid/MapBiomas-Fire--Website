@@ -61,20 +61,28 @@ class FactsheetController extends Controller
         $row = DB::table('factsheet')->where('id', $id)->first();
         abort_if(! $row, 404);
 
-        $fileCol = 'file'.$suffix;
-        $linkCol = 'link'.$suffix;
+        // Kolom bahasa aktif lebih dulu; bila PDF/tautannya belum diisi,
+        // jatuh ke bahasa lain supaya sampul tetap tampil.
+        $suffixes = [$suffix, $suffix === 'EN' ? 'ID' : 'EN'];
 
-        if (! empty($row->$fileCol)) {
-            $path = storage_path('app/public/files/factsheet/'.$row->$fileCol);
-            if (is_file($path)) {
-                return response()->file($path, [
-                    'Cache-Control' => 'public, max-age=86400',
-                ]);
+        foreach ($suffixes as $sfx) {
+            $fileCol = 'file'.$sfx;
+            if (! empty($row->$fileCol)) {
+                $path = storage_path('app/public/files/factsheet/'.$row->$fileCol);
+                if (is_file($path)) {
+                    return response()->file($path, [
+                        'Cache-Control' => 'public, max-age=86400',
+                    ]);
+                }
             }
         }
 
-        $link = $row->$linkCol ?? '';
-        if (is_string($link) && str_starts_with($link, 'http')) {
+        foreach ($suffixes as $sfx) {
+            $linkCol = 'link'.$sfx;
+            $link = $row->$linkCol ?? '';
+            if (! (is_string($link) && str_starts_with($link, 'http'))) {
+                continue;
+            }
             // Range diteruskan ke server sumber supaya pdf.js bisa mengambil
             // potongan awal file saja (xref + halaman 1), bukan puluhan MB
             // penuh, sebelum menampilkan sampul.
@@ -82,7 +90,9 @@ class FactsheetController extends Controller
             $resp = Http::timeout(60)
                 ->withHeaders($range ? ['Range' => $range] : [])
                 ->get($link);
-            abort_if(! $resp->successful(), 404);
+            if (! $resp->successful()) {
+                continue;
+            }
 
             $headers = array_filter([
                 'Content-Type' => $resp->header('Content-Type', 'application/pdf'),
