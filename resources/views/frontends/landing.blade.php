@@ -17,7 +17,7 @@
         ['value' => $angka(9.5, 1), 'unit' => __('juta ha'), 'label' => __('2000-2024 burned areas')],
         ['value' => $angka(40), 'unit' => '%', 'label' => __('2000-2024 burned areas are on peat land')],
         ['value' => $angka(637011), 'unit' => __('ha'), 'label' => __('January-August 2026 burned areas')],
-        ['value' => $angka(27), 'unit' => '%', 'label' => __('January-July 2026 burned areas are in Papua')],
+        ['value' => $angka(27), 'unit' => '%', 'label' => __('January-August 2026 burned areas are in Papua')],
     ];
 
     /** Tanggal publikasi kabar mengikuti bahasa aktif (id/en). */
