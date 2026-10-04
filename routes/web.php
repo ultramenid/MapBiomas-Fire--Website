@@ -50,6 +50,7 @@ Route::middleware([checkSession::class])->group(function () {
     Route::get('/cms/editnews/{id}', [NewsController::class, 'edit'])->name('cms.news.edit');
     Route::get('/cms/previewnews/{id}', [NewsController::class, 'previewnews'])->name('cms.news.preview');
     Route::get('/cms/previewcardnews/{id}', [NewsController::class, 'previewcardnews'])->name('cms.news.preview-card');
+    Route::get('/cms/highlights', [PagesController::class, 'cmshighlights'])->name('cms.pages.highlights');
     Route::get('/cms/pageabout', [PagesController::class, 'cmsabout'])->name('cms.pages.about');
     Route::get('/cms/termofuse', [PagesController::class, 'cmstermofuse'])->name('cms.pages.termofuse');
     Route::get('/cms/cmsrefrencemap', [PagesController::class, 'cmsrefrencemap'])->name('cms.pages.refrencemap');

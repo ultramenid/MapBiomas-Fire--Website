@@ -18,6 +18,7 @@ $navGroups = [
     [
         'label' => 'Pages',
         'items' => [
+            ['route' => 'cms.pages.highlights', 'match' => 'cms.pages.highlights', 'label' => 'Highlights', 'icon' => 'M18 20V10M12 20V4M6 20v-6'],
             ['route' => 'cms.pages.about', 'match' => 'cms.pages.about', 'label' => 'About', 'icon' => 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01'],
             ['route' => 'cms.pages.termofuse', 'match' => 'cms.pages.termofuse', 'label' => 'Terms of Use', 'icon' => 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'],
             ['route' => 'cms.pages.atbd', 'match' => 'cms.pages.atbd', 'label' => 'ATBD', 'icon' => 'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15z'],

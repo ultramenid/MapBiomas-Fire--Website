@@ -13,12 +13,12 @@
 
     // Rentang tahun memakai tanda hubung tak-putus (U+2011) supaya barisnya
     // pindah sebelum rentang, bukan memotongnya jadi "2000-" / "2024".
-    $highlights = [
-        ['value' => $angka(9.5, 1), 'unit' => __('juta ha'), 'label' => __('2000-2024 burned areas')],
-        ['value' => $angka(40), 'unit' => '%', 'label' => __('2000-2024 burned areas are on peat land')],
-        ['value' => $angka(637011), 'unit' => __('ha'), 'label' => __('January-August 2026 burned areas')],
-        ['value' => $angka(27), 'unit' => '%', 'label' => __('January-August 2026 burned areas are in Papua')],
-    ];
+    $suffix = $lang === 'id' ? 'ID' : 'EN';
+    $highlights = $highlightRows->map(fn ($r) => [
+        'value' => $angka((float) $r->value, (int) $r->decimals),
+        'unit' => (string) $r->{'unit'.$suffix},
+        'label' => str_replace('-', '‑', $r->{'label'.$suffix}),
+    ]);
 
     /** Tanggal publikasi kabar mengikuti bahasa aktif (id/en). */
     $tanggal = fn (string $date): string => \Illuminate\Support\Carbon::parse($date)
@@ -150,7 +150,7 @@
                                    class="border border-ember px-3 py-2.5 text-center lg:px-[3.5cqw] lg:py-[2.05cqw] font-display text-[clamp(0.85rem,3.16cqw,1.55rem)] font-light leading-[1.2] text-neutral-900 transition-colors hover:bg-ember hover:text-white">
                                        {{ __('Factsheet') }}
                                 </a>
-                                <a href="https://plataform.firemonitor-id.mapbiomas.org/"
+                                <a href="https://kobong.mapbiomas.id"
                                    class="border border-ember px-3 py-2.5 text-center lg:px-[3.5cqw] lg:py-[2.05cqw] font-display text-[clamp(0.85rem,3.16cqw,1.55rem)] font-light leading-[1.2] text-neutral-900 transition-colors hover:bg-ember hover:text-white">
                                     {{ __('Access The Platform') }}
                                 </a>

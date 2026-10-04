@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\DB;
 
 class PagesController extends Controller
 {
+    public function cmshighlights(){
+        $title = 'MapBiomas Fire - Highlights';
+        $nav = 'pages';
+        return view('backends.highlights', compact('title', 'nav'));
+    }
+
     public function cmsabout(){
         $title = 'MapBiomas Fire - About';
         $nav = 'pages';

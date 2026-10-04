@@ -20,6 +20,7 @@ class IndexController extends Controller
             'news' => $this->getNews(),
             'infographic' => $this->getInfographic(),
             'factsheetLink' => $this->getFactsheetLink(),
+            'highlightRows' => DB::table('highlights')->orderBy('id')->get(),
         ]);
     }
 
